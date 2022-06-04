@@ -127,10 +127,13 @@ class UserInterface:
         # TODO: layers render need a better approach
         for layer in self.objects_rendering_queue:
             for obj in self.objects_rendering_queue.get(layer):
-                # x = (obj.x + self.current_camera.get_x()) * self.game_state.cell_size
-                # y = (obj.y + self.current_camera.get_y()) * self.game_state.cell_size
-                x = obj.x * self.game_state.cell_size
-                y = obj.y * self.game_state.cell_size
+
+                # TODO: make better approach for camera_object centering
+                magic_number_x = 12
+                magic_number_y = 9
+
+                x = (obj.x - self.current_camera.get_x() + magic_number_x) * self.game_state.cell_size
+                y = (obj.y - self.current_camera.get_y() + magic_number_y) * self.game_state.cell_size
                 self.screen.blit(obj.image, (x, y))
         pygame.display.flip()
 
