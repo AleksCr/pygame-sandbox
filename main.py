@@ -6,7 +6,6 @@ class GameState:
         self.user_interface = user_interface
         self.commands = []
         self.game_objects = []
-        self.cell_size = 32
         self.world_size = [10, 10]
         self.player_mob = self.fast_test_owner()
 
@@ -45,7 +44,6 @@ class GameState:
                 self.player_mob.x -= 1
             if command == 'K_UP':
                 self.player_mob.y -= 1
-                print(self.player_mob.y)
             if command == 'K_DOWN':
                 self.player_mob.y += 1
             self.commands.remove(command)
@@ -81,7 +79,11 @@ class UserInterface:
 
         pygame.init()
 
-        self.screen = pygame.display.set_mode((800, 600))
+        self.cell_size = 32
+        self.screen_width = 800
+        self.screen_height = 600
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+
         self.commands_queue = []
 
         self.objects_rendering_queue = {}
@@ -127,13 +129,11 @@ class UserInterface:
         # TODO: layers render need a better approach
         for layer in self.objects_rendering_queue:
             for obj in self.objects_rendering_queue.get(layer):
+                magic_number_x = int(self.screen_width / self.cell_size / 2)
+                magic_number_y = int(self.screen_height / self.cell_size / 2)
 
-                # TODO: make better approach for camera_object centering
-                magic_number_x = 12
-                magic_number_y = 9
-
-                x = (obj.x - self.current_camera.get_x() + magic_number_x) * self.game_state.cell_size
-                y = (obj.y - self.current_camera.get_y() + magic_number_y) * self.game_state.cell_size
+                x = (obj.x - self.current_camera.get_x() + magic_number_x) * self.cell_size
+                y = (obj.y - self.current_camera.get_y() + magic_number_y) * self.cell_size
                 self.screen.blit(obj.image, (x, y))
         pygame.display.flip()
 
