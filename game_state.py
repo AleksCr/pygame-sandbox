@@ -1,4 +1,3 @@
-import pygame
 from game_object import GameObject
 
 
@@ -24,13 +23,13 @@ class GameState:
         return obj
 
     def testing_scene_init(self) -> None:
-        self.create_new_object(x=0, y=0, layer=2, image='test.png', owner='test')
+        self.create_new_object(x=0, y=0, layer=2, image='resources/test.png', owner='test')
         self.player_mob = self.fast_test_owner()
         self.user_interface.current_camera.set_owner(self.player_mob)
 
         for x in range(1, 10):
             for y in range(1, 10):
-                self.create_new_object(x=x, y=y, layer=1, image='bf2.png')
+                self.create_new_object(x=x, y=y, layer=1, image='resources/bf2.png')
 
     def fast_test_owner(self):
         for obj in self.game_objects:
