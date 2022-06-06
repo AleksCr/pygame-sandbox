@@ -6,8 +6,6 @@ class GameState:
         self.user_interface = user_interface
         self.commands = []
         self.game_objects = []
-        self.world_size = [10, 10]
-        self.player_mob = self.fast_test_owner()
 
     def create_new_object(self, **obj_kwargs):
         obj = GameObject(
@@ -15,25 +13,27 @@ class GameState:
             y=obj_kwargs.get('y'),
             image=obj_kwargs.get('image'),
             layer=obj_kwargs.get('layer'),
-            owner=obj_kwargs.get('owner')
+            is_controllable=obj_kwargs.get('is_controllable')
         )
         self.game_objects.append(obj)
 
-        self.user_interface.update_objects_rendering_queue()
+        self.user_interface.update_objects_layers_rendering_queue()
         return obj
 
     def testing_scene_init(self) -> None:
-        self.create_new_object(x=0, y=0, layer=2, image='resources/test.png', owner='test')
-        self.player_mob = self.fast_test_owner()
+        # TODO: make level loading system
+        self.create_new_object(x=0, y=0, layer=2, image='resources/test.png', is_controllable=True)
+        self.player_mob = self.testing_find_controllable_mob()
         self.user_interface.current_camera.set_owner(self.player_mob)
 
         for x in range(1, 10):
             for y in range(1, 10):
                 self.create_new_object(x=x, y=y, layer=1, image='resources/bf2.png')
 
-    def fast_test_owner(self):
+    def testing_find_controllable_mob(self):
+        # TODO: refactor it in accordance with upcoming level load system
         for obj in self.game_objects:
-            if obj.owner:
+            if obj.is_controllable:
                 return obj
 
     def update(self) -> None:
