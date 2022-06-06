@@ -43,7 +43,7 @@ class UserInterface:
 
         self.game_state.testing_scene_init()
 
-    def update_objects_rendering_queue(self) -> None:
+    def update_objects_layers_rendering_queue(self) -> None:
         self.objects_rendering_queue = {}
         for obj in self.game_state.game_objects:
             l = self.objects_rendering_queue.get(obj.layer) or []
@@ -59,6 +59,7 @@ class UserInterface:
             self.process_input()
             self.update()
             self.render()
+            pygame.display.set_caption(f'FPS: {fps.get_fps()}')
 
     def process_input(self) -> None:
         for event in pygame.event.get():
