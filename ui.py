@@ -1,5 +1,6 @@
 import pygame
 from game_state import GameState
+from icons_manager import IconsManager
 
 
 class Camera:
@@ -28,6 +29,7 @@ class UserInterface:
     def __init__(self):
         self.running = True
         self.game_state = GameState(self)
+        self.icons_manager = IconsManager()
         self.current_camera = Camera(10, 3)
 
         pygame.init()
@@ -88,5 +90,5 @@ class UserInterface:
 
                 x = (obj.x - self.current_camera.get_x() + magic_number_x) * self.cell_size
                 y = (obj.y - self.current_camera.get_y() + magic_number_y) * self.cell_size
-                self.screen.blit(obj.image, (x, y))
+                self.screen.blit(self.icons_manager.get_image(obj.image), (x, y))
         pygame.display.flip()

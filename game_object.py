@@ -7,6 +7,9 @@ class GameObject:
         self.y = y
         self.x_bias = 0
         self.y_bias = 0
-        self.image = pygame.image.load(image)  # TODO: load something like tileset in another class and make link to it's subsurface
+        self.image = image  # TODO: load something like tileset in another class and make link to it's subsurface
         self.layer = layer
         self.is_controllable = is_controllable
+
+    def set_image(self, image):
+        self.image = image

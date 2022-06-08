@@ -24,7 +24,7 @@ class GameState:
         return obj
 
     def testing_scene_init(self) -> None:
-        self.level_manager.get_level_objects()
+        self.level_manager.import_chunk_form_tmx()
         # TODO: make level loading system
         # self.create_new_object(x=0, y=0, layer=2, image='resources/test.png', is_controllable=True)
         # self.player_mob = self.testing_find_controllable_mob()
