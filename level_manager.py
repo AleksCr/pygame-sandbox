@@ -5,8 +5,8 @@ class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
 
-    def import_chunk_form_tmx(self):
-        chunk_map = tmx.TileMap.load('testmap.tmx')
+    def import_chunk_form_tmx(self, tmx_file):
+        chunk_map = tmx.TileMap.load(tmx_file)
         height, width = chunk_map.height, chunk_map.width
         obj_types = {}
         tile_set = chunk_map.tilesets[0].tiles

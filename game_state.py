@@ -29,7 +29,7 @@ class GameState:
         self.player_mob = self.testing_find_controllable_mob()
         self.user_interface.current_camera.set_owner(self.player_mob)
 
-        self.level_manager.import_chunk_form_tmx()
+        self.level_manager.import_chunk_form_tmx('testmap.tmx')
 
     def testing_find_controllable_mob(self):
         # TODO: refactor it in accordance with upcoming level load system
