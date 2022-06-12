@@ -9,4 +9,4 @@ class IconsManager:
         if not self.icons_dict.get(image):
             image_subdict = {image: pygame.image.load(image)}
             self.icons_dict.update(image_subdict)
-        return pygame.image.load(image)
+        return self.icons_dict.get(image)

@@ -82,13 +82,14 @@ class UserInterface:
 
     def render(self) -> None:
         self.screen.fill((255, 255, 255))
+
+        screen_center_x = int(self.screen_width / self.cell_size / 2)
+        screen_center_y = int(self.screen_height / self.cell_size / 2)
+
         # TODO: layers render need a better approach
         for layer in self.objects_rendering_queue:
             for obj in self.objects_rendering_queue.get(layer):
-                magic_number_x = int(self.screen_width / self.cell_size / 2)
-                magic_number_y = int(self.screen_height / self.cell_size / 2)
-
-                x = (obj.x - self.current_camera.get_x() + magic_number_x) * self.cell_size
-                y = (obj.y - self.current_camera.get_y() + magic_number_y) * self.cell_size
+                x = (obj.x - self.current_camera.get_x() + screen_center_x) * self.cell_size
+                y = (obj.y - self.current_camera.get_y() + screen_center_y) * self.cell_size
                 self.screen.blit(self.icons_manager.get_image(obj.image), (x, y))
         pygame.display.flip()
