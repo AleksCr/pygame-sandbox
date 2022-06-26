@@ -8,9 +8,10 @@ class GameState:
         self.level_manager = LevelManager(self)
         self.commands = []
         self.game_objects = []
+
         self.player_mob = None
 
-    def create_new_object(self, obj_kwargs):
+    def create_new_object(self, obj_kwargs, chunk_key='Center'):
         obj = GameObject(
             x=obj_kwargs.get('x'),
             y=obj_kwargs.get('y'),
@@ -24,12 +25,11 @@ class GameState:
         return obj
 
     def testing_scene_init(self) -> None:
-        # TODO: make level loading system
         self.create_new_object({'x': 0, 'y': 0, 'layer': 2, 'image': 'resources/test.png', 'is_controllable': True})
-        self.player_mob = self.testing_find_controllable_mob()
+        self.player_mob = self.testing_find_controllable_mob()  # TODO: EC for input
         self.user_interface.current_camera.set_owner(self.player_mob)
 
-        self.level_manager.import_chunk_form_tmx('testmap.tmx')
+        self.level_manager.import_map_form_tmx('testmap.tmx')
 
     def testing_find_controllable_mob(self):
         # TODO: refactor it in accordance with upcoming level load system

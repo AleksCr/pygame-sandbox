@@ -5,7 +5,7 @@ class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
 
-    def import_chunk_form_tmx(self, tmx_file):
+    def import_map_form_tmx(self, tmx_file):
         chunk_map = tmx.TileMap.load(tmx_file)
         height, width = chunk_map.height, chunk_map.width
         obj_types = {}
@@ -26,11 +26,11 @@ class LevelManager:
             for tile in layer.tiles:
                 gid = tile.gid
 
-                x += 1
-
                 if x == width:
                     x = 0
                     y += 1
+
+                x += 1
 
                 if not gid:
                     continue
@@ -48,8 +48,8 @@ class LevelManager:
                 self.game_state.create_new_object(object_dict)
             layer_i += 1
 
-    def save_chunk_data(self):
+    def save_map_data(self):
         pass
 
-    def load_chunk_data(self):
+    def load_map_data(self):
         pass
