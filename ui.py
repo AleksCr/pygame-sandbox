@@ -1,6 +1,7 @@
 import pygame
 from game_state import GameState
 from icons_manager import IconsManager
+from ecs_processors import RenderProcessor
 
 
 class Camera:
@@ -45,14 +46,8 @@ class UserInterface:
 
         self.game_state.testing_scene_init()
 
-    def update_objects_layers_rendering_queue(self) -> None:
-        self.objects_rendering_queue = {}
-        for obj in self.game_state.game_objects:
-            l = self.objects_rendering_queue.get(obj.layer) or []
-            l.append(obj)
-            d = {obj.layer: l}
-            self.objects_rendering_queue.update(d)
-        self.objects_rendering_queue = dict(sorted(self.objects_rendering_queue.items()))
+        render_processor = RenderProcessor(self.screen)
+        self.game_state.world.add_processor(render_processor)
 
     def run_game_loop(self) -> None:
         fps = pygame.time.Clock()
@@ -60,7 +55,6 @@ class UserInterface:
             fps.tick(60)
             self.process_input()
             self.update()
-            self.render()
             pygame.display.set_caption(f'FPS: {fps.get_fps()}')
 
     def process_input(self) -> None:
@@ -78,18 +72,5 @@ class UserInterface:
                 self.running = False
 
     def update(self) -> None:
+        self.game_state.world.process()
         self.game_state.update()
-
-    def render(self) -> None:
-        self.screen.fill((255, 255, 255))
-
-        screen_center_x = int(self.screen_width / self.cell_size / 2)
-        screen_center_y = int(self.screen_height / self.cell_size / 2)
-
-        # TODO: layers render need a better approach
-        for layer in self.objects_rendering_queue:
-            for obj in self.objects_rendering_queue.get(layer):
-                x = (obj.x - self.current_camera.get_x() + screen_center_x) * self.cell_size
-                y = (obj.y - self.current_camera.get_y() + screen_center_y) * self.cell_size
-                self.screen.blit(self.icons_manager.get_image(obj.image), (x, y))
-        pygame.display.flip()
