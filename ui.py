@@ -31,7 +31,7 @@ class UserInterface:
         self.running = True
         self.game_state = GameState(self)
         self.icons_manager = IconsManager()
-        self.current_camera = Camera(10, 3)
+        self.current_camera = Camera(5, 3)
 
         pygame.init()
 
@@ -46,7 +46,7 @@ class UserInterface:
 
         self.game_state.testing_scene_init()
 
-        render_processor = RenderProcessor(self.screen)
+        render_processor = RenderProcessor(self)
         self.game_state.world.add_processor(render_processor)
 
     def run_game_loop(self) -> None:

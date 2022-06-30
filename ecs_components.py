@@ -1,6 +1,7 @@
 class RenderableComponent:
-    def __init__(self, image):
+    def __init__(self, image, layer):
         self.image = image
+        self.layer = layer
 
 
 class ControlComponent:

@@ -10,3 +10,5 @@ class IconsManager:
             image_subdict = {image: pygame.image.load(image)}
             self.icons_dict.update(image_subdict)
         return self.icons_dict.get(image)
+
+    # TODO: compile image for mob method
