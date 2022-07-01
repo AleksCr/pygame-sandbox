@@ -5,7 +5,7 @@ class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
 
-    def import_map_form_tmx(self, tmx_file):
+    def import_map_form_tmx(self, tmx_file) -> None:
         chunk_map = tmx.TileMap.load(tmx_file)
         height, width = chunk_map.height, chunk_map.width
         obj_types = {}
@@ -45,7 +45,7 @@ class LevelManager:
                     'is_controllable': False
                 }
 
-                self.game_state.create_new_object(object_dict)
+                self.game_state.create_new_entity(object_dict)
             layer_i += 1
 
     def save_map_data(self):
