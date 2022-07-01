@@ -13,6 +13,8 @@ class GameState:
         self.world = esper.World()
         self.player_mob = None
 
+        self.testing_scene_init()
+
     def create_new_entity(self, obj_kwargs) -> int:
         entity = self.world.create_entity()
         self.world.add_component(entity, RenderableComponent(

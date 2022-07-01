@@ -29,9 +29,9 @@ class Camera:
 class UserInterface:
     def __init__(self):
         self.running = True
-        self.game_state = GameState(self)
         self.icons_manager = IconsManager()
         self.current_camera = Camera(5, 3)
+        self.game_state = GameState(self)
 
         pygame.init()
 
@@ -43,8 +43,6 @@ class UserInterface:
         self.commands_queue = []
 
         self.objects_rendering_queue = {}
-
-        self.game_state.testing_scene_init()
 
         render_processor = RenderProcessor(self)
         self.game_state.world.add_processor(render_processor)
