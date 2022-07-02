@@ -15,8 +15,7 @@ class RenderProcessor(esper.Processor):
         pygame.display.flip()
 
     def blit_next_layer(self, camera, layer, max_layer) -> None:
-        screen_center_x = int(self.user_interface.screen_width / self.user_interface.cell_size / 2)
-        screen_center_y = int(self.user_interface.screen_height / self.user_interface.cell_size / 2)
+        screen_center_x, screen_center_y = self.user_interface.get_screen_center_coordinates()
 
         for ent, (rend, pos) in self.world.get_components(RenderableComponent, PositionComponent):
 

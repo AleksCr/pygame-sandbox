@@ -66,9 +66,37 @@ class UserInterface:
                     self.game_state.commands.append('K_UP')
                 if event.key == pygame.K_DOWN:
                     self.game_state.commands.append('K_DOWN')
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.game_state.commands.append('MOUSEBUTTONUP')
             if event.type == pygame.QUIT:
                 self.running = False
 
     def update(self) -> None:
         self.game_state.world.process()
         self.game_state.update()
+
+    def get_click_tile_pixels(self, pos) -> tuple:
+        x, y = self.get_click_relative_coordinates(pos)
+        x_tile = abs(32 * x - pos[0])
+        y_tile = abs(32 * y - pos[1])
+        return x_tile, y_tile
+
+    def get_screen_center_coordinates(self) -> tuple:
+        screen_center_x = int(self.screen_width / self.cell_size / 2)
+        screen_center_y = int(self.screen_height / self.cell_size / 2)
+        return screen_center_x, screen_center_y
+
+    def get_click_relative_coordinates(self, pos):
+        x = pos[0] // self.cell_size
+        y = pos[1] // self.cell_size
+        return x, y
+
+    def get_click_absolute_coordinates(self, pos):
+        x, y = self.get_click_relative_coordinates(pos)
+
+        screen_center_x, screen_center_y = self.get_screen_center_coordinates()
+
+        x = x + self.current_camera.get_x() - screen_center_x
+        y = y + self.current_camera.get_y() - screen_center_y
+        return x, y
+

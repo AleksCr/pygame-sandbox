@@ -46,4 +46,6 @@ class GameState:
                 player_position_component.y -= 1
             if command == 'K_DOWN':
                 player_position_component.y += 1
+            if command == 'MOUSEBUTTONUP':
+                pass
             self.commands.remove(command)
