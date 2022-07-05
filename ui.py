@@ -2,6 +2,7 @@ import pygame
 from game_state import GameState
 from icons_manager import IconsManager
 from ecs_processors import RenderProcessor
+from ecs_components import RenderableComponent, PositionComponent
 
 
 class Camera:
@@ -68,12 +69,31 @@ class UserInterface:
                     self.game_state.commands.append('K_DOWN')
             if event.type == pygame.MOUSEBUTTONUP:
                 self.game_state.commands.append('MOUSEBUTTONUP')
+                print(self.find_clicked_entity(event.pos))
             if event.type == pygame.QUIT:
                 self.running = False
 
     def update(self) -> None:
         self.game_state.world.process()
         self.game_state.update()
+
+    def find_clicked_entity(self, pos) -> None or int:
+        x, y = self.get_click_absolute_coordinates(pos)
+
+        clicked_entity = None
+        max_layer = 0
+        x_bias, y_bias = self.get_click_tile_pixels(pos)
+
+        for entity, (rend, position) in self.game_state.world.get_components(RenderableComponent, PositionComponent):
+            if position.x == x and position.y == y:
+                surface = rend.image
+                mask = pygame.mask.from_surface(surface)
+                mask_pos = (x_bias, y_bias)
+
+                if mask.get_at(mask_pos) and rend.layer >= max_layer:
+                    max_layer = rend.layer
+                    clicked_entity = entity  # last element is overlap each other becasue RenderableComponent sorts same order as blit order
+        return clicked_entity
 
     def get_click_tile_pixels(self, pos) -> tuple:
         x, y = self.get_click_relative_coordinates(pos)

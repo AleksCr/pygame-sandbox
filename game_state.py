@@ -1,6 +1,6 @@
 from level_manager import LevelManager
 import esper
-from ecs_components import RenderableComponent, PositionComponent, ControlComponent
+from ecs_components import RenderableComponent, PositionComponent
 
 
 class GameState:
