@@ -1,21 +1,25 @@
-class RenderableComponent:
-    def __init__(self, image, layer):
-        self.image = image
-        self.layer = layer
+from dataclasses import dataclass as component
+import pygame
 
 
-class ControlComponent:
-    def __init__(self):
-        self.control = True
+@component
+class Renderable:
+    image: pygame.Surface
+    layer: int
 
 
-class PositionComponent:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+@component
+class Collide:
+    pass
 
 
-class InputComponent:
+@component
+class Position:
+    x: int
+    y: int
+
+
+class Input:
     def __init__(self):
         pass
 

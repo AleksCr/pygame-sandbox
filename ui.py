@@ -1,8 +1,9 @@
+import consts
 import pygame
 from game_state import GameState
 from icons_manager import IconsManager
 from ecs_processors import RenderProcessor
-from ecs_components import RenderableComponent, PositionComponent
+from ecs_components import Renderable, Position
 
 
 class Camera:
@@ -84,7 +85,7 @@ class UserInterface:
         max_layer = 0
         x_bias, y_bias = self.get_click_tile_pixels(pos)
 
-        for entity, (rend, position) in self.game_state.world.get_components(RenderableComponent, PositionComponent):
+        for entity, (rend, position) in self.game_state.world.get_components(Renderable, Position):
             if position.x == x and position.y == y:
                 surface = rend.image
                 mask = pygame.mask.from_surface(surface)
@@ -92,7 +93,7 @@ class UserInterface:
 
                 if mask.get_at(mask_pos) and rend.layer >= max_layer:
                     max_layer = rend.layer
-                    clicked_entity = entity  # last element is overlap each other becasue RenderableComponent sorts same order as blit order
+                    clicked_entity = entity  # last element is overlap each other becasue Renderable sorts same order as blit order
         return clicked_entity
 
     def get_click_tile_pixels(self, pos) -> tuple:

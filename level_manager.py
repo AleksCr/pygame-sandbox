@@ -1,9 +1,24 @@
 import tmx
 
+import consts
+
 
 class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
+
+    @staticmethod
+    def layer_string_to_int(layer) -> int:
+        if layer == 'LAYER_TURF':
+            layer = consts.LAYER_TURF
+        if layer == 'LAYER_OBJECT':
+            layer = consts.LAYER_OBJECT
+        if layer == 'LAYER_MOB':
+            layer = consts.LAYER_MOB
+        if layer == 'LAYER_AREA':
+            layer = consts.LAYER_AREA
+
+        return layer
 
     def import_map_form_tmx(self, tmx_file) -> None:
         chunk_map = tmx.TileMap.load(tmx_file)
@@ -19,8 +34,12 @@ class LevelManager:
 
             obj_types.update({gid: obj_type_data})
 
-        layer_i = 0
         for layer in chunk_map.layers:
+            layer_l = 'LAYER_TURF'
+            for prop in layer.properties:
+                if prop.name == 'Layer':
+                    layer_l = self.layer_string_to_int(prop.value)
+
             x = 0
             y = 0
             for tile in layer.tiles:
@@ -41,12 +60,11 @@ class LevelManager:
                     'x': x,
                     'y': y,
                     'image': (obj_type.get('image')).source,
-                    'layer': layer_i,
+                    'layer': layer_l,
                     'is_controllable': False
                 }
 
                 self.game_state.create_new_entity(object_dict)
-            layer_i += 1
 
     def save_map_data(self):
         pass

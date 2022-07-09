@@ -1,6 +1,7 @@
+import consts
 from level_manager import LevelManager
 import esper
-from ecs_components import RenderableComponent, PositionComponent
+from ecs_components import Renderable, Position
 
 
 class GameState:
@@ -17,17 +18,17 @@ class GameState:
 
     def create_new_entity(self, obj_kwargs) -> int:
         entity = self.world.create_entity()
-        self.world.add_component(entity, RenderableComponent(
+        self.world.add_component(entity, Renderable(
             image=self.user_interface.icons_manager.get_image(obj_kwargs.get('image')),
             layer=obj_kwargs.get('layer')
         ))
-        self.world.add_component(entity, PositionComponent(obj_kwargs.get('x'), obj_kwargs.get('y')))
+        self.world.add_component(entity, Position(obj_kwargs.get('x'), obj_kwargs.get('y')))
 
         return entity
 
     def testing_scene_init(self) -> None:
-        player = self.create_new_entity({'x': 0, 'y': 0, 'layer': 2, 'image': 'resources/test.png'})
-        player_cam = self.world.component_for_entity(player, PositionComponent)
+        player = self.create_new_entity({'x': 0, 'y': 0, 'layer': consts.LAYER_MOB, 'image': 'resources/test.png'})
+        player_cam = self.world.component_for_entity(player, Position)
         self.user_interface.current_camera.set_owner(player_cam)
         self.player_mob = player
 
@@ -35,7 +36,7 @@ class GameState:
 
     def update(self) -> None:
         for command in self.commands:
-            player_position_component = self.world.component_for_entity(self.player_mob, PositionComponent)
+            player_position_component = self.world.component_for_entity(self.player_mob, Position)
             if not self.player_mob:
                 return
             if command == 'K_RIGHT':

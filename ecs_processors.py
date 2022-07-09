@@ -1,6 +1,7 @@
 import esper
 import pygame
-from ecs_components import RenderableComponent, PositionComponent
+import consts
+from ecs_components import Renderable, Position
 
 
 class RenderProcessor(esper.Processor):
@@ -11,13 +12,13 @@ class RenderProcessor(esper.Processor):
 
     def process(self, *args, **kwargs) -> None:
         self.user_interface.screen.fill(self.clear_color)
-        self.blit_next_layer(self.user_interface.current_camera, 0, 4)
+        self.blit_next_layer(self.user_interface.current_camera, consts.LAYER_TURF, consts.LAYER_AREA)
         pygame.display.flip()
 
     def blit_next_layer(self, camera, layer, max_layer) -> None:
         screen_center_x, screen_center_y = self.user_interface.get_screen_center_coordinates()
 
-        for ent, (rend, pos) in self.world.get_components(RenderableComponent, PositionComponent):
+        for ent, (rend, pos) in self.world.get_components(Renderable, Position):
 
             x = (pos.x - camera.get_x() + screen_center_x) * self.user_interface.cell_size
             y = (pos.y - camera.get_y() + screen_center_y) * self.user_interface.cell_size
