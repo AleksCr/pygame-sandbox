@@ -1,16 +1,35 @@
+import time
 import esper
 import pygame
 import consts
 from ecs_components import Renderable, Position
 
 
-class RenderProcessor(esper.Processor):
-    def __init__(self, user_interface, clear_color=(255, 255, 255)):
+class DelayedProcessor(esper.Processor):
+    def __init__(self, process_delay=0):
         super().__init__()
+        self.process_delay = process_delay
+        self.next_call = 0
+
+    def process(self, *args, **kwargs) -> bool:
+        now = time.time()
+        if now <= self.next_call:
+            return False
+        else:
+            self.next_call = now + self.process_delay
+            return True
+
+
+class RenderProcessor(DelayedProcessor):
+    def __init__(self, user_interface, clear_color=(255, 255, 255), process_delay=0):
+        super().__init__(process_delay)
         self.user_interface = user_interface
         self.clear_color = clear_color
 
     def process(self, *args, **kwargs) -> None:
+        if not super().process():
+            return
+
         self.user_interface.screen.fill(self.clear_color)
         self.blit_next_layer(self.user_interface.current_camera, consts.LAYER_TURF, consts.LAYER_AREA)
         pygame.display.flip()
