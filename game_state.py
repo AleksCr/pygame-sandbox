@@ -1,7 +1,7 @@
-import consts
+from entity import EntityBuilder
 from level_manager import LevelManager
 import esper
-from ecs_components import Renderable, Position
+from ecs_components import Position
 
 
 class GameState:
@@ -12,32 +12,23 @@ class GameState:
         self.game_objects = []
 
         self.world = esper.World()
-        self.player_mob = None
+        self.player_entity = None
 
         self.testing_scene_init()
 
-    def create_new_entity(self, obj_kwargs) -> int:
-        entity = self.world.create_entity()
-        self.world.add_component(entity, Renderable(
-            image=self.user_interface.icons_manager.get_image(obj_kwargs.get('image')),
-            layer=obj_kwargs.get('layer')
-        ))
-        self.world.add_component(entity, Position(obj_kwargs.get('x'), obj_kwargs.get('y')))
-
-        return entity
-
     def testing_scene_init(self) -> None:
-        player = self.create_new_entity({'x': 0, 'y': 0, 'layer': consts.LAYER_MOB, 'image': 'resources/test.png'})
-        player_cam = self.world.component_for_entity(player, Position)
+        player = EntityBuilder(self.world)
+        player.make_mob(self.user_interface.icons_manager.get_image('resources/test.png'), 1, 1)
+        player_cam = self.world.component_for_entity(player.get_id(), Position)
         self.user_interface.current_camera.set_owner(player_cam)
-        self.player_mob = player
+        self.player_entity = player.get_id()
 
         self.level_manager.import_map_form_tmx('testmap.tmx')
 
     def update(self) -> None:
+        player_position_component = self.world.component_for_entity(self.player_entity, Position)
         for command in self.commands:
-            player_position_component = self.world.component_for_entity(self.player_mob, Position)
-            if not self.player_mob:
+            if not self.player_entity:
                 return
             if command == 'K_RIGHT':
                 player_position_component.x += 1

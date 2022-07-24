@@ -1,11 +1,22 @@
-import tmx
-
 import consts
+from entity import EntityBuilder
+
+import tmx
 
 
 class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
+
+    def create_entity_from_string(self, layer_string, image, x, y):
+        entity = EntityBuilder(self.game_state.world)
+        image = self.game_state.user_interface.icons_manager.get_image(image)
+        if layer_string == 'LAYER_TURF':
+            entity.make_turf(image, x, y)
+        if layer_string == 'LAYER_OBJECT':
+            entity.make_object(image, x, y)
+        if layer_string == 'LAYER_MOB':
+            entity.make_mob(image, x, y)
 
     @staticmethod
     def layer_string_to_int(layer) -> int:
@@ -35,10 +46,10 @@ class LevelManager:
             obj_types.update({gid: obj_type_data})
 
         for layer in chunk_map.layers:
-            layer_l = 'LAYER_TURF'
+            layer_string = 'LAYER_TURF'
             for prop in layer.properties:
                 if prop.name == 'Layer':
-                    layer_l = self.layer_string_to_int(prop.value)
+                    layer_string = prop.value
 
             x = 0
             y = 0
@@ -56,15 +67,7 @@ class LevelManager:
 
                 obj_type = obj_types.get(gid)
 
-                object_dict = {
-                    'x': x,
-                    'y': y,
-                    'image': (obj_type.get('image')).source,
-                    'layer': layer_l,
-                    'is_controllable': False
-                }
-
-                self.game_state.create_new_entity(object_dict)
+                self.create_entity_from_string(layer_string, (obj_type.get('image')).source, x, y)
 
     def save_map_data(self):
         pass
