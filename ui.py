@@ -39,8 +39,6 @@ class UserInterface:
         self.screen_height = 600
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
 
-        self.commands_queue = []
-
         self.objects_rendering_queue = {}
 
         self.game_state.testing_scene_init()
@@ -74,6 +72,11 @@ class UserInterface:
                     self.game_state.commands.append('K_UP')
                 if event.key == pygame.K_DOWN:
                     self.game_state.commands.append('K_DOWN')
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.game_state.commands.append('MOUSEBUTTONUP')
+                clicked_object = self.find_clicked_entity(event.pos)
+                if clicked_object:
+                    print(clicked_object.image)
             if event.type == pygame.QUIT:
                 self.running = False
 
@@ -93,3 +96,46 @@ class UserInterface:
                 y = (obj.y - self.current_camera.get_y() + screen_center_y) * self.cell_size
                 self.screen.blit(self.icons_manager.get_image(obj.image), (x, y))
         pygame.display.flip()
+
+    def find_clicked_entity(self, pos) -> None or int:
+        x, y = self.get_click_absolute_coordinates(pos)
+
+        clicked_entity = None
+        max_layer = 0
+        x_bias, y_bias = self.get_click_tile_pixels(pos)
+
+        for game_object in self.game_state.game_objects:
+            if game_object.x == x and game_object.y == y:
+                surface = self.icons_manager.get_image(game_object.image)
+                mask = pygame.mask.from_surface(surface)
+                mask_pos = (x_bias, y_bias)
+
+                if mask.get_at(mask_pos) and game_object.layer >= max_layer:
+                    max_layer = game_object.layer
+                    clicked_entity = game_object  # last element is overlap each other becasue RenderableComponent sorts same order as blit order
+        return clicked_entity
+
+    def get_click_tile_pixels(self, pos) -> tuple:
+        x, y = self.get_click_relative_coordinates(pos)
+        x_tile = abs(32 * x - pos[0])
+        y_tile = abs(32 * y - pos[1])
+        return x_tile, y_tile
+
+    def get_screen_center_coordinates(self) -> tuple:
+        screen_center_x = int(self.screen_width / self.cell_size / 2)
+        screen_center_y = int(self.screen_height / self.cell_size / 2)
+        return screen_center_x, screen_center_y
+
+    def get_click_relative_coordinates(self, pos):
+        x = pos[0] // self.cell_size
+        y = pos[1] // self.cell_size
+        return x, y
+
+    def get_click_absolute_coordinates(self, pos):
+        x, y = self.get_click_relative_coordinates(pos)
+
+        screen_center_x, screen_center_y = self.get_screen_center_coordinates()
+
+        x = x + self.current_camera.get_x() - screen_center_x
+        y = y + self.current_camera.get_y() - screen_center_y
+        return x, y
