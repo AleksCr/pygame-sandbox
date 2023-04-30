@@ -112,7 +112,7 @@ class UserInterface:
 
                 if mask.get_at(mask_pos) and game_object.layer >= max_layer:
                     max_layer = game_object.layer
-                    clicked_entity = game_object  # last element is overlap each other becasue RenderableComponent sorts same order as blit order
+                    clicked_entity = game_object  # last element is overlap each other because RenderableComponent sorts same order as blit order
         return clicked_entity
 
     def get_click_tile_pixels(self, pos) -> tuple:
